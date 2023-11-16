@@ -2,3 +2,6 @@
 \.vs
 \.vscode
 \.cache
+\vs2022
+\vs2019
+\vs2017

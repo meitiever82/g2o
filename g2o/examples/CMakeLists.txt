@@ -36,6 +36,7 @@ endif()
 # slam 3d
 if (G2O_BUILD_SLAM3D_TYPES)
   add_subdirectory(sphere)
+  add_subdirectory(cylinder)
 endif()
 
 if(G2O_BUILD_SLAM2D_TYPES AND G2O_BUILD_SLAM3D_TYPES)

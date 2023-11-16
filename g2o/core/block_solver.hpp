@@ -124,12 +124,18 @@ bool BlockSolver<Traits>::buildStructure(bool zeroBlocks) {
     if (!v->marginalized()) {
       v->setColInHessian(_sizePoses);
       _sizePoses += dim;
-      blockPoseIndices[_numPoses] = _sizePoses;
+      blockPoseIndices[_numPoses] =
+          _sizePoses;  // blockPoseIndices的大小 -
+                       // _numPoses表示存储了多少个vertex，每个member
+                       // 表示了vertex的大小。
       ++_numPoses;
     } else {
       v->setColInHessian(_sizeLandmarks);
       _sizeLandmarks += dim;
-      blockLandmarkIndices[_numLandmarks] = _sizeLandmarks;
+      blockLandmarkIndices[_numLandmarks] =
+          _sizeLandmarks;  // blockLandmarkIndices的大小 -
+                           // _numLandmarks表示存储了多少个Landmark，每个member
+                           // 表示了Landmark的大小。
       ++_numLandmarks;
     }
     sparseDim += dim;
