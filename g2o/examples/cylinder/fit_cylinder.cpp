@@ -75,5 +75,54 @@ int main(int argc, char** argv) {
   // Setup optimizer
   g2o::SparseOptimizer optimizer;
 
+  typedef g2o::BlockSolverX BlockSolverType;
+  typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType;
+    
+  auto solver = new g2o::OptimizationAlgorithmLevenberg(std::make_unique<BlockSolverType>(std::make_unique<LinearSolverType>()));
+  optimizer.setAlgorithm(solver);
+
+  double focal_length= 480.;
+  Eigen::Vector2d principal_point(320., 240.);
+
+  g2o::CameraParameters* camera = new g2o::CameraParameters( focal_length, principal_point, 0 );
+  camera->setId(0);
+  optimizer.addParameter( camera );
+  
+  // Add pose vertex
+  Eigen::Vector2d obs;
+
+  CylinderFittingVertex *v = new CylinderFittingVertex();
+  Eigen::VectorXd abc(5);
+  abc<<0.1,0.1,23.0,-2.0,10.0;
+  v->setEstimate(abc);
+  v->setId(0);
+
+  optimizer.addVertex(v);
+
+  for (size_t j = 0; j < noisyLandmarks.size(); j++) {
+    g2o::VertexPointXYZ *vPoint = new g2o::VertexPointXYZ();
+  //        std::cout << noisyLandmarks[j].transpose() << std::endl;
+    vPoint->setEstimate(noisyLandmarks[j]);
+    vPoint->setId(j + 3);
+  //        vPoint->setFixed(true);
+  //        vPoint->setMarginalized(true);
+    optimizer.addVertex(vPoint);
+  }
+
+  std::vector<CylinderFittingEdge *>  vcy;
+
+  // 往图中增加边
+  for (size_t i = 0; i < noisyLandmarks.size(); i++) {
+      CylinderFittingEdge *edge2 = new CylinderFittingEdge();
+      edge2->setId(noisyLandmarks.size()*2+i);
+      edge2->setVertex(0, optimizer.vertices()[i+3]);             // 设置连接的顶点
+      edge2->setVertex(1, optimizer.vertices()[0]);
+      edge2->setInformation(Eigen::Matrix<double, 1, 1>::Identity()); // 信息矩阵：协方差矩阵之逆
+      optimizer.addEdge(edge2);
+      vcy.push_back(edge2);
+  }
+
+  optimizer.initializeOptimization();
+  optimizer.optimize(40);
   return 0;
 }
