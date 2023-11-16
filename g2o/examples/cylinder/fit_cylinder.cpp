@@ -26,6 +26,8 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <Eigen/Eigenvalues>
+
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
@@ -65,23 +67,10 @@ int main(int argc, char** argv) {
   createCameraPose(v_Twc, v_noisyTwc);
   const size_t pose_num = v_Twc.size();
 
-  //cv::Mat cv_K = (cv::Mat_<double>(3, 3) << 480, 0, 320, 0, 480, 240, 0, 0, 1);  
-  cv::Mat cv_K(3, 3, CV_64FC1);
-  // Fill the matrix with values
-  cv_K.at<double>(0, 0) = 480;
-  cv_K.at<double>(0, 1) = 0;
-  cv_K.at<double>(0, 2) = 320;
-  cv_K.at<double>(1, 0) = 0;
-  cv_K.at<double>(1, 1) = 480;
-  cv_K.at<double>(1, 2) = 240;
-  cv_K.at<double>(2, 0) = 0;
-  cv_K.at<double>(2, 1) = 0;
-  cv_K.at<double>(2, 2) = 1;
-  //cv::Mat cv_K(480, 0, 320, 0, 480, 240, 0, 0, 1);
-  
-  Eigen::Tensor<double, 3, Eigen::RowMajor> K;
+  cv::Mat cv_K = (cv::Mat_<double>(3, 3) << 480, 0, 320, 0, 480, 240, 0, 0, 1);
+  Eigen::Matrix3d K;
   cv::cv2eigen(cv_K, K);
-
+  std::cout << K << std::endl;
   std::vector<Eigen::Vector2i> features_curr;
   // Setup optimizer
   g2o::SparseOptimizer optimizer;
