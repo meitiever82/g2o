@@ -10,6 +10,7 @@
 
 #define pi 3.1415926535
 
+// rotation vector, qx and r
 class CylinderFittingVertex : public g2o::BaseVertex<5, Eigen::Matrix<double,5,1>> {
   public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -45,16 +46,22 @@ class CylinderFittingEdge : public g2o::BaseBinaryEdge<1, double, g2o::VertexPoi
     }
 
     // 计算曲线模型误差
+    // 使用当前顶点的值计算的测量值与真实的测量值之间的误差
     void computeError() override {
       const g2o::VertexPointXYZ *vPoint = static_cast<const g2o::VertexPointXYZ *> (_vertices[0]);
       const CylinderFittingVertex *v = static_cast<const CylinderFittingVertex *> (_vertices[1]);
       const Eigen::Matrix<double,5,1> abc = v->estimate();
+      double r = abc[4];
+      
+      //_error << ;
     }
 
-    void linearizeOplus() override{ 
+    void linearizeOplus() override {
       const g2o::VertexPointXYZ* vPoint = static_cast<const g2o::VertexPointXYZ*>(_vertices[0]);
       const CylinderFittingVertex* v = static_cast<const CylinderFittingVertex*>(_vertices[1]);
       const Eigen::Matrix<double, 5, 1> abc = v->estimate();
+      
+      //_jacobianOplusXi[pos, pos] = 
     }
 
 };
