@@ -4,17 +4,9 @@
 #include <cmath>
 #include <chrono>
 #include <Eigen/Core>
-#include <opencv2/core/core.hpp>
 
 #include <g2o/core/base_vertex.h>
-#include <g2o/core/base_unary_edge.h>
-#include <g2o/core/block_solver.h>
-#include <g2o/core/optimization_algorithm_levenberg.h>
-#include <g2o/core/optimization_algorithm_gauss_newton.h>
-#include <g2o/core/optimization_algorithm_dogleg.h>
-#include <g2o/solvers/dense/linear_solver_dense.h>
 #include <g2o/core/base_binary_edge.h>
-#include <g2o/types/sba/types_sba.h>
 
 #define pi 3.1415926535
 
@@ -68,4 +60,3 @@ class CylinderFittingEdge : public g2o::BaseBinaryEdge<1, double, g2o::VertexPoi
 };
 
 #endif //VO_SIMULATE_CYLINDER_H
-

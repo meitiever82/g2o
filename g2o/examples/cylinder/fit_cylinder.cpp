@@ -32,20 +32,21 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
 
-#include "g2o/core/auto_differentiation.h"
-#include "g2o/core/base_unary_edge.h"
-#include "g2o/core/base_vertex.h"
-#include "g2o/core/optimization_algorithm_factory.h"
-#include "g2o/core/sparse_optimizer.h"
-#include "g2o/stuff/command_args.h"
-#include "g2o/stuff/sampler.h"
+#include <g2o/core/sparse_optimizer.h>
+#include <g2o/stuff/command_args.h>
+#include <g2o/stuff/sampler.h>
+#include <g2o/core/block_solver.h>
+#include <g2o/core/optimization_algorithm_levenberg.h>
+#include <g2o/core/optimization_algorithm_gauss_newton.h>
+#include <g2o/core/optimization_algorithm_dogleg.h>
+#include <g2o/core/optimization_algorithm_factory.h>
+#include <g2o/solvers/dense/linear_solver_dense.h>
+#include <g2o/types/sba/types_six_dof_expmap.h>
 
 #include "data.h"
 #include "cyRepresentation.h"
 
 using namespace std;
-
-G2O_USE_OPTIMIZATION_LIBRARY(dense);
 
 int main(int argc, char** argv) {
   int numPoints;
@@ -67,9 +68,10 @@ int main(int argc, char** argv) {
   createCameraPose(v_Twc, v_noisyTwc);
   const size_t pose_num = v_Twc.size();
 
-  cv::Mat cv_K = (cv::Mat_<double>(3, 3) << 480, 0, 320, 0, 480, 240, 0, 0, 1);
+  //cv::Mat cv_K = (cv::Mat_<double>(3, 3) << 480, 0, 320, 0, 480, 240, 0, 0, 1);
   Eigen::Matrix3d K;
-  cv::cv2eigen(cv_K, K);
+  K << 480, 0, 320, 0, 480, 240, 0, 0, 1;
+  //cv::cv2eigen(cv_K, K);
   std::cout << K << std::endl;
   std::vector<Eigen::Vector2i> features_curr;
   // Setup optimizer
