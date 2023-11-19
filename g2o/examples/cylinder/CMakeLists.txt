@@ -1,6 +1,6 @@
-add_executable(fit_cylinder
-  fit_cylinder.cpp
+add_executable(cylinder_fit
+cylinder_fit.cpp
 )
 
-set_target_properties(fit_cylinder PROPERTIES OUTPUT_NAME fit_cylinder)
-target_link_libraries(fit_cylinder core types_slam3d solver_dense)
+set_target_properties(cylinder_fit PROPERTIES OUTPUT_NAME cylinder_fit)
+target_link_libraries(cylinder_fit core types_slam3d solver_dense)
