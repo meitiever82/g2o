@@ -1,4 +1,6 @@
 add_executable(cylinder_fit
+data.h
+cyRepresentation.h
 cylinder_fit.cpp
 )
 
