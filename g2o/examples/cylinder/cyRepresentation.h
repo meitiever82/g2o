@@ -49,10 +49,11 @@ class CylinderFittingEdge : public g2o::BaseBinaryEdge<1, double, g2o::VertexPoi
     // 使用当前顶点的值计算的测量值与真实的测量值之间的误差
     void computeError() override {
       const g2o::VertexPointXYZ *vPoint = static_cast<const g2o::VertexPointXYZ *> (_vertices[0]);
-      const CylinderFittingVertex *v = static_cast<const CylinderFittingVertex *> (_vertices[1]);
-      const Eigen::Matrix<double,5,1> abc = v->estimate();
-      double r = abc[4];
-      
+      const CylinderFittingVertex* vCylinder = static_cast<const CylinderFittingVertex*>(_vertices[1]);
+      const Eigen::Matrix<double, 5, 1> cylinder = vCylinder->estimate();
+      const double& radius = cylinder[4];
+
+      _error[0] = (measurement().cast<T>() - center).norm() - radius;
       //_error << ;
     }
 
